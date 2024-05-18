@@ -1,19 +1,14 @@
-<<<<<<< HEAD
-
-	<footer class="section">
-		<div class="center grey-text">Copyright 2021 Group_3__10_4_Sakila DVD Renting</div>
-	</footer>
- </body>
-=======
-<footer class="page-footer">
-  <div class="container center">
-    &copy; Copyright 2021 Group_3__10_4_Sakila DVD Renting
+<footer class="page-footer teal darken-4">
+  <div class="container center-align">
+    &copy; 2021 Group_3__10_4_Sakila DVD Renting
   </div>
-
   <style>
-    footer {
-      padding-top: 20px; /* Adjust the padding value as needed */
+    .page-footer {
+      padding-top: 10px;
+      color: #fff;
+    }
+    .page-footer .container {
+      font-size: 16px;
     }
   </style>
 </footer>
->>>>>>> 79b11c2 (Add new folder)

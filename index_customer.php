@@ -42,11 +42,8 @@
 							<div><?php echo 'Name : ' . htmlspecialchars($customer['first_name'] . ' ');  ?>
 								 <?php echo htmlspecialchars($customer['last_name']);	?></div>
 							<div><?php echo 'Email : ' . htmlspecialchars($customer['email']);	?></div> 
-<<<<<<< HEAD
-							<div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']);	?></div>
-=======
 							<div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']);	?></div>
->>>>>>> 79b11c2 (Add new folder)
+							<div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']);	?></div>
 							<div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);	?></div>
 							<!-- <div><?php echo 'Active(1), Inactive(0) :  ' . htmlspecialchars($customer['active']);	?></div> -->
 							<!-- <div><?php echo 'Create date : ' . htmlspecialchars($customer['create_date']);	?></div>		 -->

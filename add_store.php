@@ -1,246 +1,54 @@
-<<<<<<< HEAD
-<?php 
-include('config/db_connect.php');
+<?php include('header.php'); ?>
 
-$manager_staff_id = 0;
-$address = $address2 = $district = $city_name = $postal_code = $phone = '';
+<main>
+    <div class="container">
+        <h4 class="center">Rental Records</h4>
+        <?php if (isset($_SESSION['msg'])): ?>
+            <div class="card-panel green lighten-4">
+                <?php
+                echo $_SESSION['msg'];
+                unset($_SESSION['msg']);
+                ?>
+            </div>
+        <?php endif ?>
 
-$error = array('manager_staff_id'=>'', 'address'=>'', 'address2'=>'', 'district'=>'', 'city_name'=>'', 'postal_code'=>'', 'phone'=>'');
+        <!-- Add Rental button -->
+        <div class="row">
+            <div class="col s12">
+                <a href="add_rental.php" class="btn waves-effect waves-light">Add Rental</a>
+            </div>
+        </div>
 
-	if (isset($_POST ['submit'])){		
-		if(!empty($_POST['manager_staff_id'])){
-			$manager_staff_id = $_POST['manager_staff_id'];
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Rental Date</th>
+                    <th>Inventory ID</th>
+                    <th>Customer ID</th>
+                    <th>Return Date</th>
+                    <th>Staff ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($results)): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['rental_id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['rental_date']); ?></td>
+                        <td><?php echo htmlspecialchars($row['inventory_id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['customer_id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['return_date']); ?></td>
+                        <td><?php echo htmlspecialchars($row['staff_id']); ?></td>
+                        <td>
+                            <a class="btn green" href="edit_rental.php?edit=<?php echo $row['rental_id']; ?>">Edit</a>
+                            <a class="btn red" href="view_rentals.php?del=<?php echo $row['rental_id']; ?>">Delete</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</main>
 
-			// $sql3 = "SELECT count(*) from staff Where staff_id=$manager_staff_id";
-			// echo '';
-			// $result3 = mysqli_query($conn,$sql3);
-			// print_r($result3);
-			// $no_of_rows = mysqli_fetch_all($result3,MYSQLI_ASSOC);
-			// print_r($no_of_rows);
-
-			// if(mysqli_query($conn,$sql3)){}
-
-		}
-
-		// chk address
-		if(empty($_POST['address'])){
-			$error['address'] =  'Pls enter address <br />';
-		} else {
-			$address = $_POST['address'];
-			if (!preg_match('/^[a-zA-Z0-9&-,.\s]+$/',$address)){
-				$error['address'] = 'No special characters except space and &-,.';
-			}
-		}
-
-		// chk address2 - allow NULL
-		if(empty($_POST['address2'])){
-			$address2 = $_POST['address2'];
-		} else {
-			$address2 = $_POST['address2'];
-			if (!preg_match('/^[a-zA-Z0-9&-,.\s]+$/',$address2)){
-				$error['address2'] = 'No special characters except space and &-,.';
-			}
-		}
-
-		// chk district
-		if(empty($_POST['district'])){
-			$error['district'] =  'Please enter district <br />';
-		} else {
-			$district = $_POST['district'];
-			if (!preg_match('/^[a-zA-Z0-9&-,.\s]+$/',$district)){
-				$error['district'] = 'No special characters except space and &-,.';
-			}
-		}
-
-		// chk city_name
-		if(empty($_POST['city_name'])){
-			$error['city_name'] =  'Please enter city_name <br />';
-		} else {
-			$city_name = $_POST['city_name'];
-			if (!preg_match('/^[a-zA-Z0-9&-,.\s]+$/',$city_name)){
-				$error['city_name'] = 'No special characters except space and &-,.';
-			}
-		}
-
-		// chk postal_code - allow NULL
-		if(empty($_POST['postal_code'])){
-			$postal_code = $_POST['postal_code'];
-		} else {
-			$postal_code = $_POST['postal_code'];
-			if (!preg_match('/^[0-9\s]+$/',$postal_code)){
-				$error['postal_code'] = 'Only 5 numeric allowed';
-			}
-		}
-
-		// chk phone 
-		if(empty($_POST['phone'])){
-			$error['phone'] =  'Please enter phone no <br />';
-		} else {
-			$phone = $_POST['phone'];
-			if (!preg_match('/^[0-9-\s]+$/',$phone)){
-				$error['phone'] = 'Only 20 numeric and - allowed';
-			}
-		}
-
-		if (array_filter($error)){
-			// there are errors in the form
-		} else {
-			$manager_staff_id = mysqli_real_escape_string($conn, $_POST['manager_staff_id']);
-			//$address_id = mysqli_real_escape_string($conn, $_POST['address_id']);
-			$address = mysqli_real_escape_string($conn, $_POST['address']);
-			$address2 = mysqli_real_escape_string($conn, $_POST['address2']);
-			$district = mysqli_real_escape_string($conn, $_POST['district']);
-			$city_name = mysqli_real_escape_string($conn, $_POST['city_name']);
-			$postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
-			$phone = mysqli_real_escape_string($conn, $_POST['phone']);
-
-			// create sql code
-			$sql = "INSERT INTO store (manager_staff_id, address, address2, district, city_name, postal_code, phone) VALUES('$manager_staff_id', '$address', '$address2', '$district', '$city_name', '$postal_code', '$phone')";
-
-			// save to db and chk
-			if(mysqli_query($conn, $sql)){
-				// success
-				header('Location: index_store.php');
-			} else {
-				// error - to be commented when code is ready
-				echo 'query error: ' . mysqli_error($conn);
-			}			
-		} // end of if (array_filter($error))
-
-	}  //end of POST check --- if (isset($_POST ['submit'])){
-
-
-?>
-
- <!DOCTYPE html>
- <html>
-
- 	<?php include('templates/header.php'); ?>
- 	<section class="container grey-text">
- 		<h4 class="center">Add New Store</h4>
- 		<form class="white" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
- 			<label>Managing Staff ID :</label>
- 			<input type="number" name="manager_staff_id" min=1 max=10 required value="<?php echo htmlspecialchars($manager_staff_id); ?>">
- 			<div class="red-text"><?php echo $error['manager_staff_id']; ?></div>
- 			
- 			<label>Store Address Line 1 :</label>
- 			<input type="text" name="address" maxlength="50" required value="<?php echo htmlspecialchars($address); ?>">
- 			<div class="red-text"><?php echo $error['address']; ?></div>
-
- 			<label>Store Address Line 2 :</label>
- 			<input type="text" name="address2" maxlength="50" value="<?php echo htmlspecialchars($address2); ?>">
- 			<div class="red-text"><?php echo $error['address2']; ?></div>
-
- 			<label>District :</label>
- 			<input type="text" name="district" maxlength="20" required value="<?php echo htmlspecialchars($district); ?>">
- 			<div class="red-text"><?php echo $error['district']; ?></div>
-
- 			<label>Store city_name :</label>
- 			<input type="text" name="city_name" maxlength="40" required value="<?php echo htmlspecialchars($city_name); ?>">
- 			<div class="red-text"><?php echo $error['city_name']; ?></div>
-
- 			<label>Store postal_code :</label>
- 			<input type="text" name="postal_code" maxlength="5" value="<?php echo htmlspecialchars($postal_code); ?>">
- 			<div class="red-text"><?php echo $error['postal_code']; ?></div>
-
- 			<label>Store phone :</label>
- 			<input type="text" name="phone" maxlength="20" required value="<?php echo htmlspecialchars($phone); ?>">
- 			<div class="red-text"><?php echo $error['phone']; ?></div> 			
-
-			<div class="center">
-				<input type="submit" name="submit" value="submit" class="btn brand z-depth-0">
-			</div>			
- 		</form>
- 	</section>
-
- 	<?php include('templates/footer.php'); ?>
-
- </html>
-=======
-<?php
-// Database connection
-include('config/db_connect.php');
-
-// Initialize variables
-$manager_staff_id = $address = $address2 = $district = $city_name = $postal_code = $phone = '';
-$error = array('manager_staff_id'=>'', 'address'=>'', 'address2'=>'', 'district'=>'', 'city_name'=>'', 'postal_code'=>'', 'phone'=>'');
-
-if (isset($_POST['submit'])) {		
-    // Validate and sanitize form inputs
-    // Your validation code goes here
-    // ...
-
-    // If there are no errors, proceed with form submission
-    if (empty(array_filter($error))) {
-        $manager_staff_id = mysqli_real_escape_string($conn, $_POST['manager_staff_id']);
-        $address = mysqli_real_escape_string($conn, $_POST['address']);
-        $address2 = mysqli_real_escape_string($conn, $_POST['address2']);
-        $district = mysqli_real_escape_string($conn, $_POST['district']);
-        $city_name = mysqli_real_escape_string($conn, $_POST['city_name']);
-        $postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
-        $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-
-        // Create SQL query
-        $sql = "INSERT INTO store (manager_staff_id, address, address2, district, city_name, postal_code, phone) VALUES ('$manager_staff_id', '$address', '$address2', '$district', '$city_name', '$postal_code', '$phone')";
-
-        // Execute SQL query
-        if(mysqli_query($conn, $sql)){
-            // Redirect to index_store.php with success message
-            $_SESSION['success_msg'] = "Store added successfully";
-            header('Location: index_store.php');
-            exit();
-        } else {
-            echo 'query error: ' . mysqli_error($conn);
-        }			
-    }
-} 
-?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add New Store</title>
-    <!-- Add your CSS and other meta tags here -->
-</head>
-<body>
-    <?php include('templates/header.php'); ?>
-    <section class="container grey-text">
-        <h4 class="center">Add New Store</h4>
-        <form class="white" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-            <label>Managing Staff ID :</label>
-            <input type="number" name="manager_staff_id" min=1 max=10 required value="<?php echo htmlspecialchars($manager_staff_id); ?>">
-            <div class="red-text"><?php echo $error['manager_staff_id']; ?></div>
-            
-            <label>Store Address Line 1 :</label>
-            <input type="text" name="address" maxlength="50" required value="<?php echo htmlspecialchars($address); ?>">
-            <div class="red-text"><?php echo $error['address']; ?></div>
-
-            <label>Store Address Line 2 :</label>
-            <input type="text" name="address2" maxlength="50" value="<?php echo htmlspecialchars($address2); ?>">
-            <div class="red-text"><?php echo $error['address2']; ?></div>
-
-            <label>District :</label>
-            <input type="text" name="district" maxlength="20" required value="<?php echo htmlspecialchars($district); ?>">
-            <div class="red-text"><?php echo $error['district']; ?></div>
-
-            <label>Store city_name :</label>
-            <input type="text" name="city_name" maxlength="40" required value="<?php echo htmlspecialchars($city_name); ?>">
-            <div class="red-text"><?php echo $error['city_name']; ?></div>
-
-            <label>Store postal_code :</label>
-            <input type="text" name="postal_code" maxlength="5" value="<?php echo htmlspecialchars($postal_code); ?>">
-            <div class="red-text"><?php echo $error['postal_code']; ?></div>
-
-            <label>Store phone :</label>
-            <input type="text" name="phone" maxlength="20" required value="<?php echo htmlspecialchars($phone); ?>">
-            <div class="red-text"><?php echo $error['phone']; ?></div> 			
-
-            <div class="center">
-                <input type="submit" name="submit" value="Submit" class="btn brand z-depth-0">
-            </div>			
-        </form>
-    </section>
-    <?php include('templates/footer.php'); ?>
-</body>
-</html>
->>>>>>> 79b11c2 (Add new folder)
+<?php include('templates/footer.php'); ?>

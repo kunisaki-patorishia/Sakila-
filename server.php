@@ -1,7 +1,7 @@
 <?php 
 	// for index_staff.php
 	// INSERT, UPDATE & DELETE staff
-	session_start();
+
 		// Initialize variables
 		$staff_first_n = $staff_last_n = "";
 		$address = $address2 = $district = "";
@@ -31,11 +31,8 @@
 		$address2 = $_POST['address2']; 
 		$district = $_POST['district']; 
 		$city_name = $_POST['city_name'];
-<<<<<<< HEAD
 		//$postal_code = $_POST['postal_code']; 
-=======
 		$postal_code = $_POST['postal_code']; 
->>>>>>> 79b11c2 (Add new folder)
 		$staff_phone = $_POST['staff_phone']; 
 		//$picture = $_POST['picture'];
 		//$staff_email = $_POST['staff_email'];
