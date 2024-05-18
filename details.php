@@ -95,9 +95,15 @@
           <div class="row">
             <?php foreach($actors as $actor): ?><!-- Got error here - display 1 less actor-->
             
+<<<<<<< HEAD
                <?php echo htmlspecialchars($actor['actor_first_n']);
                      echo ' ';
                      echo htmlspecialchars($actor['actor_last_n']); 
+=======
+               <?php echo htmlspecialchars($actor['first_name']);
+                     echo ' ';
+                     echo htmlspecialchars($actor['last_name']); 
+>>>>>>> 79b11c2 (Add new folder)
                      echo ', '; ?>
           
             <?php endforeach; ?>

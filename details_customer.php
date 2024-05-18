@@ -49,8 +49,13 @@
        <h4>First Name : <?php echo htmlspecialchars($customer['first_name']); ?></h4>
        <h4>Last Name :  <?php echo htmlspecialchars($customer['last_name']); ?></h4>
               <div><?php echo 'Email : ' . htmlspecialchars($customer['email']);  ?></div>
+<<<<<<< HEAD
               <div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>
               <div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>
+=======
+              <!--<div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>-->
+              <!--<div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>-->
+>>>>>>> 79b11c2 (Add new folder)
               <div><?php echo 'Active(1), Inactive(0) :  ' . htmlspecialchars($customer['active']); ?></div>
               <div><?php echo 'Create date : ' . htmlspecialchars($customer['create_date']);  ?></div>
        <!-- UPDATE FORM --> <!-- DELETE FORM -->

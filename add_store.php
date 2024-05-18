@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php 
 include('config/db_connect.php');
 
@@ -155,3 +156,91 @@ $error = array('manager_staff_id'=>'', 'address'=>'', 'address2'=>'', 'district'
  	<?php include('templates/footer.php'); ?>
 
  </html>
+=======
+<?php
+// Database connection
+include('config/db_connect.php');
+
+// Initialize variables
+$manager_staff_id = $address = $address2 = $district = $city_name = $postal_code = $phone = '';
+$error = array('manager_staff_id'=>'', 'address'=>'', 'address2'=>'', 'district'=>'', 'city_name'=>'', 'postal_code'=>'', 'phone'=>'');
+
+if (isset($_POST['submit'])) {		
+    // Validate and sanitize form inputs
+    // Your validation code goes here
+    // ...
+
+    // If there are no errors, proceed with form submission
+    if (empty(array_filter($error))) {
+        $manager_staff_id = mysqli_real_escape_string($conn, $_POST['manager_staff_id']);
+        $address = mysqli_real_escape_string($conn, $_POST['address']);
+        $address2 = mysqli_real_escape_string($conn, $_POST['address2']);
+        $district = mysqli_real_escape_string($conn, $_POST['district']);
+        $city_name = mysqli_real_escape_string($conn, $_POST['city_name']);
+        $postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
+        $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+
+        // Create SQL query
+        $sql = "INSERT INTO store (manager_staff_id, address, address2, district, city_name, postal_code, phone) VALUES ('$manager_staff_id', '$address', '$address2', '$district', '$city_name', '$postal_code', '$phone')";
+
+        // Execute SQL query
+        if(mysqli_query($conn, $sql)){
+            // Redirect to index_store.php with success message
+            $_SESSION['success_msg'] = "Store added successfully";
+            header('Location: index_store.php');
+            exit();
+        } else {
+            echo 'query error: ' . mysqli_error($conn);
+        }			
+    }
+} 
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Store</title>
+    <!-- Add your CSS and other meta tags here -->
+</head>
+<body>
+    <?php include('templates/header.php'); ?>
+    <section class="container grey-text">
+        <h4 class="center">Add New Store</h4>
+        <form class="white" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+            <label>Managing Staff ID :</label>
+            <input type="number" name="manager_staff_id" min=1 max=10 required value="<?php echo htmlspecialchars($manager_staff_id); ?>">
+            <div class="red-text"><?php echo $error['manager_staff_id']; ?></div>
+            
+            <label>Store Address Line 1 :</label>
+            <input type="text" name="address" maxlength="50" required value="<?php echo htmlspecialchars($address); ?>">
+            <div class="red-text"><?php echo $error['address']; ?></div>
+
+            <label>Store Address Line 2 :</label>
+            <input type="text" name="address2" maxlength="50" value="<?php echo htmlspecialchars($address2); ?>">
+            <div class="red-text"><?php echo $error['address2']; ?></div>
+
+            <label>District :</label>
+            <input type="text" name="district" maxlength="20" required value="<?php echo htmlspecialchars($district); ?>">
+            <div class="red-text"><?php echo $error['district']; ?></div>
+
+            <label>Store city_name :</label>
+            <input type="text" name="city_name" maxlength="40" required value="<?php echo htmlspecialchars($city_name); ?>">
+            <div class="red-text"><?php echo $error['city_name']; ?></div>
+
+            <label>Store postal_code :</label>
+            <input type="text" name="postal_code" maxlength="5" value="<?php echo htmlspecialchars($postal_code); ?>">
+            <div class="red-text"><?php echo $error['postal_code']; ?></div>
+
+            <label>Store phone :</label>
+            <input type="text" name="phone" maxlength="20" required value="<?php echo htmlspecialchars($phone); ?>">
+            <div class="red-text"><?php echo $error['phone']; ?></div> 			
+
+            <div class="center">
+                <input type="submit" name="submit" value="Submit" class="btn brand z-depth-0">
+            </div>			
+        </form>
+    </section>
+    <?php include('templates/footer.php'); ?>
+</body>
+</html>
+>>>>>>> 79b11c2 (Add new folder)
