@@ -29,8 +29,12 @@
 
 // }
 	// connect to database
+<<<<<<< HEAD
 	$db = mysqli_connect('localhost', 'mike','test1234','sakila');
 	// chk connection
+=======
+	$db = mysqli_connect('localhost', 'mike', 'PCLC1712', 'entertainment');
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
 	if (!$db) {
 	 	echo 'Connection Error : ' . mysqli_connect_error();
 	}
@@ -185,4 +189,9 @@
 	// OR ....
 	// $results = mysqli_query($db, "SELECT * FROM rental WHERE rental_id=$rental_id && return_date=null"); 				
 
+<<<<<<< HEAD
 ?>
+=======
+?>
+	
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6

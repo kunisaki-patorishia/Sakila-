@@ -1,0 +1,3 @@
+"staff_id","staff_first_n","staff_last_n","address","address2","district","city_name","postal_code","staff_phone","picture","staff_email","store_id","active","username","password","last_update"
+"1","Mike","Hillyer","23 Workhaven Lane", NULL, "Alberta", "Lethbridge", , "14033335568", NULL, "Mike.Hillyer@sakilastaff.com", "1", "1", "Mike", "8cb2237d0679ca88db6464eac60da96345513964", "2006-2-15 3:57"
+"2", "Jon" , "Stephens", "1411 Lillydale Drive", NULL, "QLD","Woodridge", , "6172235589", NULL, "Jon.Stephens@sakilastaff.com", "2", "1", "Jon", NULL, "2006-2-15 3:57"

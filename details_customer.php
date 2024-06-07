@@ -1,6 +1,11 @@
 <?php 
+<<<<<<< HEAD
   $conn = mysqli_connect('localhost','mike','test1234','sakila');
 
+=======
+  $conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
+  
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
   // chk connection
   if (!$conn) {
   	echo 'Connection Error : ' . mysqli_connect_error();
@@ -46,11 +51,24 @@
    <?php if($customer): ?>
        <h4><?php echo 'Store id : ' . htmlspecialchars($customer['store_id']); ?></h4>
        <h4><?php echo 'Customer id : ' . htmlspecialchars($customer['customer_id']); ?></h4>
+<<<<<<< HEAD
        <h4>First Name : <?php echo htmlspecialchars($customer['customer_First_n']); ?></h4>
        <h4>Last Name :  <?php echo htmlspecialchars($customer['customer_Last_n']); ?></h4>
               <div><?php echo 'Email : ' . htmlspecialchars($customer['email']);  ?></div>
               <div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>
               <div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>
+=======
+       <h4>First Name : <?php echo htmlspecialchars($customer['first_name']); ?></h4>
+       <h4>Last Name :  <?php echo htmlspecialchars($customer['last_name']); ?></h4>
+              <div><?php echo 'Email : ' . htmlspecialchars($customer['email']);  ?></div>
+<<<<<<< HEAD
+              <div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>
+              <div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>
+=======
+              <!--<div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>-->
+              <!--<div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>-->
+>>>>>>> 79b11c2 (Add new folder)
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
               <div><?php echo 'Active(1), Inactive(0) :  ' . htmlspecialchars($customer['active']); ?></div>
               <div><?php echo 'Create date : ' . htmlspecialchars($customer['create_date']);  ?></div>
        <!-- UPDATE FORM --> <!-- DELETE FORM -->

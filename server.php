@@ -1,7 +1,11 @@
 <?php 
 	// for index_staff.php
 	// INSERT, UPDATE & DELETE staff
+<<<<<<< HEAD
 	session_start();
+=======
+
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
 		// Initialize variables
 		$staff_first_n = $staff_last_n = "";
 		$address = $address2 = $district = "";
@@ -21,7 +25,11 @@
 
 	// connect to database
 	//	CREATE USER 'mike'@'localhost' IDENTIFIED VIA mysql_native_password USING '***';GRANT ALL PRIVILEGES ON *.* TO 'mike'@'localhost' REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+<<<<<<< HEAD
 	$db = mysqli_connect('localhost', 'mike','test1234','sakila');
+=======
+	$db = mysqli_connect('localhost', 'mike', 'PCLC1712', 'entertainment');
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
 
 	// if save button is clicked
 	if (isset($_POST['save'])) {
@@ -32,6 +40,10 @@
 		$district = $_POST['district']; 
 		$city_name = $_POST['city_name'];
 		//$postal_code = $_POST['postal_code']; 
+<<<<<<< HEAD
+=======
+		$postal_code = $_POST['postal_code']; 
+>>>>>>> da12d4a3991d2a067910c64d05e709ce4b3465c6
 		$staff_phone = $_POST['staff_phone']; 
 		//$picture = $_POST['picture'];
 		//$staff_email = $_POST['staff_email'];
