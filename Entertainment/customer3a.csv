@@ -1,4 +1,3 @@
-customer_id,store_id,first_name,last_name,email,address_id,phone,deposit,active,create_date,last_update
 1,1,MARY,SMITH,MARY.SMITH@sakilacustomer.org,5,28303384290,0,1,14/02/2006 22:04,15/02/2006 04:57
 2,1,PATRICIA,JOHNSON,PATRICIA.JOHNSON@sakilacustomer.org,6,8.39E+11,0,1,14/02/2006 22:04,15/02/2006 04:57
 3,1,LINDA,WILLIAMS,LINDA.WILLIAMS@sakilacustomer.org,7,4.48E+11,0,1,14/02/2006 22:04,15/02/2006 04:57

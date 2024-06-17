@@ -1,122 +1,119 @@
-<?php 
-  // DISPLAY(shd chg to UPDATE) & DELETE film
-  //include('c:/xampp/htdocs/tuts/config/db_connect.php');
-  // include('C:/xampp/htdocs/tuts/config/db_connect.php');
-  // connect to db
-  $conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
+<?php
+include('config/db_connect.php');
 
-  // chk connection
-  if (!$conn) {
-    echo 'Connection Error : ' . mysqli_connect_error();
-  }
+$update_success = false;
+$update_error = '';
 
-  if(isset($_POST['delete'])){
-    $film_id_to_delete = mysqli_real_escape_string($conn, $_POST['film_id_to_delete']);
+// Function to sanitize input
+function sanitize($conn, $input) {
+    return mysqli_real_escape_string($conn, htmlspecialchars($input));
+}
+
+// Handle delete operation
+if (isset($_POST['delete'])){
+    $film_id_to_delete = sanitize($conn, $_POST['film_id_to_delete']);
 
     $sql = "DELETE FROM film WHERE film_id = $film_id_to_delete";
 
     if(mysqli_query($conn, $sql)){
-      //success
-      header('Location: index.php');
+        header('Location: index.php'); // Redirect after successful delete
+        exit();
     } else {
-      // failure -- display the following error msg in HTML part
-      echo 'query error: ' . mysqli_error($conn);
+        echo 'Query error: ' . mysqli_error($conn);
     }
-  }
+}
 
-  //print_r($film);
-  //print_r($film['film_id']); 
+// Handle update operation
+if (isset($_POST['update'])) {
+    $film_id = sanitize($conn, $_POST['film_id']);
+    $title = sanitize($conn, $_POST['title']);
+    $release_year = sanitize($conn, $_POST['release_year']);
+    $description = sanitize($conn, $_POST['description']);
+    $language_id = sanitize($conn, $_POST['language_id']);
+    $original_language_id = sanitize($conn, $_POST['original_language_id']);
 
-    // chk GET request id param
-  if (isset($_GET['film_id'])){
-    //print_r($film_id);
-    $film_id = mysqli_real_escape_string($conn, $_GET['film_id']);
-    // mk sql
-    $sql = "SELECT * FROM film_actor WHERE film_id = $film_id";
-    // get the query result
+    // SQL query to update film details
+    $sql = "UPDATE film SET 
+            title = '$title', 
+            release_year = '$release_year', 
+            description = '$description', 
+            language_id = $language_id, 
+            original_language_id = $original_language_id 
+            WHERE film_id = $film_id";
+
+    if(mysqli_query($conn, $sql)){
+        $update_success = true;
+    } else {
+        $update_error = 'Query error: ' . mysqli_error($conn);
+    }
+}
+
+// Fetch film details based on film_id
+$film = null;
+if (isset($_GET['film_id'])){
+    $film_id = sanitize($conn, $_GET['film_id']);
+
+    $sql = "SELECT film.*, language.name AS language_name 
+            FROM film 
+            LEFT JOIN language ON film.language_id = language.language_id 
+            WHERE film.film_id = $film_id";
+
     $result = mysqli_query($conn, $sql);
-    //print_r (mysqli_query($conn, $sql));
-    //print_r($result);
-    //print_r('$sql');
-    if ($result) {
-        $sql1 = "SELECT * from film, film_actor 
-               INNER JOIN actor on film_actor.actor_id = actor.actor_id  
-               WHERE film.film_id = $film_id && film.film_id=film_actor.film_id";
-        // get the query result
-        $result = mysqli_query($conn, $sql1);
 
-        // fethc result in array format
+    if($result && mysqli_num_rows($result) > 0){
         $film = mysqli_fetch_assoc($result);
-        // print_r($film);
-        $actors = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        //print_r($actors);
+        // Fetch actors associated with the film
+        $sql_actors = "SELECT actor.first_name, actor.last_name 
+                       FROM actor 
+                       INNER JOIN film_actor ON actor.actor_id = film_actor.actor_id 
+                       WHERE film_actor.film_id = $film_id";
 
+        $result_actors = mysqli_query($conn, $sql_actors);
+        $actors = mysqli_fetch_all($result_actors, MYSQLI_ASSOC);
     } else {
-        $sql1 = "SELECT * FROM film WHERE film_id = $film_id";      
-        // get the query result
-        $result = mysqli_query($conn, $sql1);
-
-        // fethc result in array format
-        $film = mysqli_fetch_assoc($result);
-        // $actors = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        print_r($film);
+        $film = null;
+        echo 'No such film exists.';
     }
-
-    // get the query result
-    //$result = mysqli_query($conn, $sql1);
-    // fethc result in array format
-    // $film = mysqli_fetch_assoc($result);
-  //   $actors = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     mysqli_free_result($result);
     mysqli_close($conn);
+}
+?>
 
-    //print_r($film);
-    //print_r($actors);
-  }
-
- ?>
-
- <!DOCTYPE html>
- <html>
-  
- <?php include('templates/header.php'); ?>
- <div class="container center">
-  <?php if($film): ?>
-    <h4><?php echo htmlspecialchars($film['title']); ?></h4>
-    <p>Release year : <?php echo htmlspecialchars($film['release_year']); ?>   Language : <?php echo htmlspecialchars($film['language_id']); ?>    Original Language : <?php echo htmlspecialchars($film['original_language_id']); ?></p>
-    <h5>Synopsis of the film :</h5>
-    <p><?php echo htmlspecialchars($film['description']); ?></p>
-    <?php if($actors): ?>
-      <h5>Actors:</h5>
-        <div class="container">
-          <div class="row">
-            <?php foreach($actors as $actor): ?>
-              <?php echo htmlspecialchars($actor['first_name']); ?>
-              <?php echo ' '; ?>
-              <?php echo htmlspecialchars($actor['last_name']); ?>
-              <?php echo ', '; ?>
-            <?php endforeach; ?>
-          </div>      
-        </div>
-    <?php else: ?> <!-- if($actors):  -->
-        <h5>No Actors linked yet!</h5>
-    <?php endif; ?>  <!-- if($actors):  -->
-
-
-    <!-- DELETE FORM  -->
-    <form action="details.php" method="POST">
-      <input type="hidden" name="film_id_to_delete" value="<?php echo $film['film_id'] ?>">
-      <input type="submit" name="delete" value="Delete" class="btn brand z-depth-0">
-    </form>
-  <?php else: ?>  <!-- if($film): -->
-    <h5><?php echo 'query error: ' . mysqli_error($conn); ?></h5>
-    <!--<h5>No such film exists</h5>-->
-  <?php endif; ?>  <!-- if($film): -->
- </div>
-
- <?php include('templates/footer.php'); ?>
-
- </html>
+<!DOCTYPE html>
+<html>
+    <?php include('templates/header.php'); ?>
+    <div class="container">
+        <?php if($film): ?>
+            <h4 class="center"><?php echo htmlspecialchars($film['title']); ?></h4>
+            <ul class="collection">
+                <li class="collection-item"><strong>Release Year:</strong> <?php echo htmlspecialchars($film['release_year']); ?></li>
+                <li class="collection-item"><strong>Language:</strong> <?php echo htmlspecialchars($film['language_name']); ?></li>
+                <li class="collection-item"><strong>Original Language:</strong> <?php echo htmlspecialchars($film['original_language_id']); ?></li>
+                <li class="collection-item"><strong>Synopsis:</strong> <?php echo htmlspecialchars($film['description']); ?></li>
+                <?php if (!empty($actors)): ?>
+                    <li class="collection-item"><strong>Actors:</strong>
+                        <ul>
+                            <?php foreach ($actors as $actor): ?>
+                                <li><?php echo htmlspecialchars($actor['first_name'] . ' ' . $actor['last_name']); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
+                <?php else: ?>
+                    <li class="collection-item">No Actors linked yet!</li>
+                <?php endif; ?>
+            </ul>
+            <div class="center">
+                <a href="edit_film.php?film_id=<?php echo $film['film_id']; ?>" class="btn waves-effect waves-light">Edit Film</a>
+                <form method="POST" action="details.php" style="display: inline;">
+                    <input type="hidden" name="film_id_to_delete" value="<?php echo $film['film_id'] ?>">
+                    <button type="submit" name="delete" class="btn red waves-effect waves-light">Delete Film</button>
+                </form>
+            </div>
+        <?php else: ?>  
+            <h5 class="center">No such film exists.</h5>
+        <?php endif ?> 
+    </div>
+    <?php include('templates/footer.php'); ?>
+</html>

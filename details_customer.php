@@ -44,18 +44,17 @@
    <?php include('templates/header.php'); ?>  
    <div class="container center">
    <?php if($customer): ?>
-       <h4><?php echo 'Store id : ' . htmlspecialchars($customer['store_id']); ?></h4>
-       <h4><?php echo 'Customer id : ' . htmlspecialchars($customer['customer_id']); ?></h4>
-       <h4>First Name : <?php echo htmlspecialchars($customer['first_name']); ?></h4>
-       <h4>Last Name :  <?php echo htmlspecialchars($customer['last_name']); ?></h4>
+       <div><?php echo 'Store id : ' . htmlspecialchars($customer['store_id']); ?></div>
+       <div><?php echo 'Customer id : ' . htmlspecialchars($customer['customer_id']); ?></div>
+       <div>First Name : <?php echo htmlspecialchars($customer['first_name']); ?></div>
+       <div>Last Name :  <?php echo htmlspecialchars($customer['last_name']); ?></div>
               <div><?php echo 'Email : ' . htmlspecialchars($customer['email']);  ?></div>
-<<<<<<< HEAD
-              <div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>
+
+              <div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']); ?></div>
               <div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>
-=======
-              <!--<div><?php echo 'Phone : ' . htmlspecialchars($customer['customer_phone']); ?></div>-->
+              <!--<div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']); ?></div>-->
               <!--<div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);  ?></div>-->
->>>>>>> 79b11c2 (Add new folder)
+
               <div><?php echo 'Active(1), Inactive(0) :  ' . htmlspecialchars($customer['active']); ?></div>
               <div><?php echo 'Create date : ' . htmlspecialchars($customer['create_date']);  ?></div>
        <!-- UPDATE FORM --> <!-- DELETE FORM -->

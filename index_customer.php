@@ -1,64 +1,63 @@
-<?php 
-  $conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
-  
-  // chk connection
-  if (!$conn) {
-  	echo 'Connection Error : ' . mysqli_connect_error();
-  }
+<?php
+// Connect to the database
+$conn = mysqli_connect('localhost', 'mike', 'PCLC1712', 'entertainment');
 
-  // write query for all actors
-  $sql = 'SELECT * FROM customer ORDER BY first_name';
+// Check connection
+if (!$conn) {
+    die('Connection Error: ' . mysqli_connect_error());
+}
 
-  // mk query & get result
-  $result = mysqli_query($conn, $sql);
+// Write query for all customers
+$sql = 'SELECT * FROM customer ORDER BY first_name ASC';
 
-  // fetch the rows as array
-  $customers = mysqli_fetch_all($result, MYSQLI_ASSOC);
+// Execute query and get result
+$result = mysqli_query($conn, $sql);
 
-  // free result from memory
-  mysqli_free_result($result);
+// Check if query was successful
+if (!$result) {
+    die('Query Error: ' . mysqli_error($conn));
+}
 
-  // close connection to db
-  mysqli_close($conn);
- ?>
+// Fetch resulting rows as an array
+$customers = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
- <!DOCTYPE html>
- <html>
+// Free result from memory
+mysqli_free_result($result);
 
- 	<?php include('templates/header.php'); ?>
-			 	<h4 class="center grey-text">
-			 		<a href="add_customer.php" class="btn brand z-depth-0">Add New Customer</a>
-			 	</h4>
- 	<h5 class="grey-text center">List of Customers in ascending order of first name</h5>
-	<div class="container">
-		<div class="row">
-			<?php foreach($customers as $customer): ?>
-				<div class="col s6 md3">
-					<div class="card z-depth-0">
-						<div class="card-content">
-														
-							<div><?php echo 'Store ID : ' . htmlspecialchars($customer['store_id']); ?></div>
-							<div><h5><?php echo 'Customer id : ' . htmlspecialchars($customer['customer_id']); ?></h5></div>
-							<div><?php echo 'Name : ' . htmlspecialchars($customer['first_name'] . ' ');  ?>
-								 <?php echo htmlspecialchars($customer['last_name']);	?></div>
-							<div><?php echo 'Email : ' . htmlspecialchars($customer['email']);	?></div> 
-							<div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']);	?></div>
-							<div><?php echo 'Phone : ' . htmlspecialchars($customer['phone']);	?></div>
-							<div><?php echo 'Deposit : $ ' . htmlspecialchars($customer['deposit']);	?></div>
-							<!-- <div><?php echo 'Active(1), Inactive(0) :  ' . htmlspecialchars($customer['active']);	?></div> -->
-							<!-- <div><?php echo 'Create date : ' . htmlspecialchars($customer['create_date']);	?></div>		 -->
-						</div>
-						<!-- <div><?php print_r($customer['customer_id']); ?></div> -->
-						<div class="card-action right-align">
-							<!--<a class="brand-text" href="details_customer.php?customer_id=<?php echo $customer['customer_id'] ?>">More Info</a>-->	
-						</div>							
-					</div>
-				</div>
+// Close database connection
+mysqli_close($conn);
+?>
 
-			<?php endforeach; ?>
-		</div>
-	</div>
+<!DOCTYPE html>
+<html>
+<?php include('templates/header.php'); ?>
 
-	<?php include('templates/footer.php'); ?>
+<h5 class="grey-text center">List of Customers by Order of First Name</h5>
 
- </html>
+<h4 class="center grey-text">
+    <a href="add_customer.php" class="btn brand z-depth-0">Add New Customer</a>
+</h4>
+
+<div class="container">
+    <div class="row">
+        <?php foreach ($customers as $customer): ?>
+            <div class="col s12 m6">
+                <div class="card z-depth-0">
+                    <div class="card-content left-align">
+                        <h6><?php echo 'Customer ID: ' . htmlspecialchars($customer['customer_id']); ?></h6>
+                        <div><?php echo 'Name: ' . htmlspecialchars($customer['first_name'] . ' ' . $customer['last_name']); ?></div>
+                        <div><?php echo 'Email: ' . htmlspecialchars($customer['email']); ?></div>
+                        <div><?php echo 'Phone: ' . htmlspecialchars($customer['phone']); ?></div>
+                        <div><?php echo 'Deposit: $ ' . htmlspecialchars($customer['deposit']); ?></div>
+                    </div>
+                    <div class="card-action right-align">
+                        <a class="brand-text" href="details_customer.php?customer_id=<?php echo $customer['customer_id'] ?>">More Info</a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<?php include('templates/footer.php'); ?>
+</html>

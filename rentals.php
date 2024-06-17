@@ -58,78 +58,22 @@ if (isset($_GET['del'])) {
     }
 }
 
-// Retrieve all rental records
-$results = mysqli_query($db, "SELECT * FROM rental WHERE return_date IS NULL");
+// Retrieve all rental records with customer names and staff names
+$results = mysqli_query($db, "SELECT rental.rental_id, rental.rental_date, rental.return_date, rental.inventory_id, rental.customer_id, rental.staff_id, customer.first_name AS customer_first_name, customer.last_name AS customer_last_name, staff.staff_first_n AS staff_first_name, staff.staff_last_n AS staff_last_name
+                             FROM rental 
+                             LEFT JOIN customer ON rental.customer_id = customer.customer_id 
+                             LEFT JOIN staff ON rental.staff_id = staff.staff_id
+                             WHERE rental.return_date IS NULL");
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Rental Records - Sakila DVD Renting Company</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <style type="text/css">
-        .brand {
-            background: #cbb09c !important;
-        }
-        .brand-text {
-            color: #cbb09c !important;
-        }
-        .sidenav-trigger i {
-            color: #cbb09c !important;
-        }
-        .nav-wrapper {
-            position: relative;
-        }
-        .brand-logo {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: 10px;
-        }
-        .sidenav-trigger {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 10px;
-        }
-        table {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background: #f2f2f2;
-        }
-        footer {
-            background: #cbb09c;
-            color: white;
-            padding: 20px 0;
-        }
-        .container {
-            max-width: 90%;
-            margin: 20px auto;
-        }
-        .btn {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body class="grey lighten-4">
-
-    <?php include('templates/header.php'); ?>
+<?php include('templates/header.php'); ?>
 
 <main>
     <div class="container">
-        <h4 class="center">Rental Records</h4>
+        <h5 class="center grey-text">Rental Records</h5>
         <?php if (isset($_SESSION['msg'])): ?>
             <div class="card-panel green lighten-4">
                 <?php
@@ -141,40 +85,36 @@ $results = mysqli_query($db, "SELECT * FROM rental WHERE return_date IS NULL");
 
         <!-- Add Rental button -->
         <div class="row">
-            <div class="col s12">
-                <a href="add_rental.php" class="btn waves-effect waves-light">Add Rental</a>
+            <div class="col s12 center">
+                <a href="add_rental.php" class="btn brand z-depth-0">Add Rental</a>
             </div>
         </div>
 
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Rental ID</th>
-                    <th>Rental Date</th>
-                    <th>Inventory ID</th>
-                    <th>Customer ID</th>
-                    <th>Return Date</th>
-                    <th>Staff ID</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = mysqli_fetch_assoc($results)): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['rental_id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['rental_date']); ?></td>
-                        <td><?php echo htmlspecialchars($row['inventory_id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['customer_id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['return_date']); ?></td>
-                        <td><?php echo htmlspecialchars($row['staff_id']); ?></td>
-                        <td>
-                            <a class="btn green" href="edit_rental.php?edit=<?php echo $row['rental_id']; ?>">Edit</a>
-                            <a class="btn red" href="view_rentals.php?del=<?php echo $row['rental_id']; ?>">Delete</a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+        <div class="row">
+            <?php while ($row = mysqli_fetch_assoc($results)): ?>
+                <div class="col s12 m6">
+                    <div class="card z-depth-0">
+                        <div class="card-content left-align">
+                            <h6><?php echo 'Rental ID: ' . htmlspecialchars($row['rental_id']); ?></h6>
+                            <div><?php echo 'Rental Date: ' . htmlspecialchars($row['rental_date']); ?></div>
+                            <div><?php echo 'Inventory ID: ' . htmlspecialchars($row['inventory_id']); ?></div>
+                            <div><?php echo 'Customer Name: ' . htmlspecialchars($row['customer_first_name'] . ' ' . $row['customer_last_name']); ?></div>
+                            <div><?php echo 'Return Date: ' . htmlspecialchars($row['return_date']); ?></div>
+                            <div><?php echo 'Staff Name: ' . htmlspecialchars($row['staff_first_name'] . ' ' . $row['staff_last_name']); ?></div>
+                        </div>
+                        <div class="card-action right-align">
+                            <a class="brand-text" href="edit_rental.php?edit=<?php echo $row['rental_id']; ?>">Edit</a>
+                            <a class="brand-text" href="view_rentals.php?del=<?php echo $row['rental_id']; ?>">Delete</a>
+                            <form method="POST" action="view_rentals.php" style="display: inline;">
+                                <input type="hidden" name="rental_id" value="<?php echo $row['rental_id']; ?>">
+                                <input type="hidden" name="staff_id" value="<?php echo $staff_id; ?>">
+                                <button type="submit" name="update" class="btn-small green">Return</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
     </div>
 </main>
 

@@ -80,7 +80,10 @@
   <li><a href="rentals.php">Placing/Closing Rental</a></li>
   <li><a href="index_customer.php">Manage Customers</a></li>
   <li><a href="index_store.php">Manage Business</a></li>
+  <li><a href="index_staff.php">Manage Staff</a></li>
   <li><a href="index_film.php">Manage Films</a></li>
+  <li><a href="index_actor.php">View Actors & Actress</a></li>
+  <li><a href="index_film_actor.php">View Actor & Actoress's filmography </a></li>
 </ul>
 
 <!-- Mobile Dropdown Structure -->
@@ -88,7 +91,11 @@
     <li><a href="rentals.php">Placing/Closing Rental</a></li>
     <li><a href="index_customer.php">Manage Customers</a></li>
     <li><a href="index_store.php">Manage Business</a></li>
+    <li><a href="index_staff.php">Manage Staff</a></li>
     <li><a href="index_film.php">Manage Films</a></li>
+    <li><a href="index_actor.php">View Actors & Actress</a></li>
+    <li><a href="index_film_actor.php">View Actor & Actoress's filmography </a></li>
+
 </ul>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

@@ -1,65 +1,53 @@
 <?php 
-  $conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
+$conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
 
-  // chk connection
-  if (!$conn) {
-  	echo 'Connection Error : ' . mysqli_connect_error();
-  }
+// Check connection
+if (!$conn) {
+    echo 'Connection Error : ' . mysqli_connect_error();
+}
 
+// Write query for all actors and their films, ordered by actor's first name
+$sql = 'SELECT film_actor.actor_id, actor.first_name, actor.last_name, GROUP_CONCAT(film.title SEPARATOR ", ") AS film_titles
+        FROM film_actor 
+        INNER JOIN film ON film_actor.film_id = film.film_id 
+        INNER JOIN actor ON film_actor.actor_id = actor.actor_id
+        GROUP BY film_actor.actor_id
+        ORDER BY actor.first_name ASC';
 
+// Make query and get result
+$result = mysqli_query($conn, $sql);
 
-  // write query for all actors
-  // $sql = 'SELECT film_actor.film_id, film.title, film_actor.actor_id, actor.actor_first_n, actor.actor_last_n FROM film_actor, film INNER JOIN actor on film_actor.actor_d=actor.actor_id where film_actor.film_id=film.film_id ';
+// Fetch the rows as array
+$film_actors = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-  // $sql3 = 'Select film_actor.film_id, film.title, film_actor.actor_id, actor.actor_first_n, actor.actor_last_n FROM film , actor, film_actor Where film.film_id=film_actor.film_id && film_actor.actor_id=actor.actor_id  ';
+// Free result from memory
+mysqli_free_result($result);
 
-  $sql = 'SELECT film_actor.film_id, film.title, film_actor.actor_id, actor.actor_first_n, actor.actor_last_n FROM film , actor, film_actor Where film.film_id=film_actor.film_id && film_actor.actor_id=actor.actor_id';
+// Close connection to db
+mysqli_close($conn);
+?>
 
-  // mk query & get result
-  $result = mysqli_query($conn, $sql);
-
-  // fetch the rows as array
-  $film_actors = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//print_r($film_actors);
-  // free result from memory
-  mysqli_free_result($result);
-
-  // close connection to db
-  mysqli_close($conn);
- ?>
-
- <!DOCTYPE html>
- <html>
-
- 	<?php include('templates/header.php'); ?>
-	                <li><a href="add_film.php" class="btn brand z-depth-0">Add New Film</a>
-	                    <a href="add_actor.php" class="btn brand z-depth-0">Add New Actor</a>
-	                	<a href="add_film_actor.php" class="btn brand z-depth-0">Link Film and Actors</a>
-	                </li> 	
- 	<h5 class="grey-text center">List of Films and Actors</h5>
-	<div class="container">
-		<div class="row">
-			<?php foreach($film_actors as $film_actor): ?>
-				<div class="col s6 md3">
-					<div class="card z-depth-0">
-						<div class="card-content">
-							<div><?php echo htmlspecialchars($film_actor['film_id']) ?></div>
-							<h6><?php echo htmlspecialchars($film_actor['title']); ?></h6>
-							<div><?php echo htmlspecialchars($film_actor['actor_id']); ?></div>
-							<h6></h6>
-							<h6><?php echo htmlspecialchars($film_actor['actor_first_n']); ?></h6>
-							<h6><?php echo htmlspecialchars($film_actor['actor_last_n']); ?></h6>	
-						</div>						
-<!-- 						<div class="card-action right-align">
-							<a class="brand-text" href="details_actor.php?actor_id=<?php echo $film_actor['actor_id'] ?>">More Info</a>	
-						</div>	 -->						
-					</div>
-				</div>
-
-			<?php endforeach; ?>
-		</div>
-	</div>
-
-	<?php include('templates/footer.php'); ?>
-
- </html>
+<!DOCTYPE html>
+<html>
+    <?php include('templates/header.php'); ?>
+    <h5 class="grey-text center">List of Films and Actors</h5>
+    <h4 class="center grey-text">
+        <a href="add_actor.php" class="btn brand z-depth-0">Add New Actor</a>
+        <a href="add_film_actor.php" class="btn brand z-depth-0">Link Film and Actors</a>
+    </h4>
+    <div class="container">
+        <div class="row">
+            <?php foreach($film_actors as $film_actor): ?>
+                <div class="col s12">
+                    <div class="card z-depth-0">
+                        <div class="card-content">
+                            <h6><?php echo "Actor's Name: " . htmlspecialchars($film_actor['first_name'] . " " . $film_actor['last_name']); ?></h6>
+                            <p><?php echo "Films: " . htmlspecialchars($film_actor['film_titles']); ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php include('templates/footer.php'); ?>
+</html>

@@ -1,58 +1,74 @@
 <?php 
 include('config/db_connect.php');
 
-  // write query for all stores
-  $sql = 'SELECT * FROM store ORDER BY store_id';
+// Fetch all stores from the database
+$sql = 'SELECT s.*, st.staff_first_n AS manager_first_n, st.staff_last_n AS manager_last_n 
+        FROM store s
+        LEFT JOIN staff st ON s.manager_staff_id = st.staff_id
+        ORDER BY s.store_id';
 
-  // mk query & get result
-  $result = mysqli_query($conn, $sql);
-
-  // fetch the rows as array
-  $stores = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-  // free result from memory
-  mysqli_free_result($result);
-
-  // close connection to db
-  mysqli_close($conn);
-
+$result = mysqli_query($conn, $sql);
+$stores = mysqli_fetch_all($result, MYSQLI_ASSOC);
+mysqli_free_result($result);
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
 <html>
- 	<?php include('templates/header.php'); ?>
-    <h4 class="center grey-text">
-    <a href="add_store.php" class="btn brand z-depth-0">Add New Store</a>
-    <a href="index_staff.php" class="btn brand z-depth-0">Manage Staff</a></li> 
-  </h4>
+    <?php include('templates/header.php'); ?>
 
- 	<h5 class="grey-text center">List of Stores</h5>
- 	<div class="container">
- 		<div class="row">
- 			<?php foreach($stores as $store): ?>
- 				<div class="col s6 md3">
- 					<div class="card z-depth-0">
-            <div class="card-content">
-              <h6>Store Id : <?php echo htmlspecialchars($store['store_id']); ?></h6>
-              <div>Managing Staff Id : <?php echo htmlspecialchars($store['manager_staff_id']); ?></div>
-              <div>Store Address : <?php echo htmlspecialchars($store['address']); ?></div>
-                <!-- <div><?php echo htmlspecialchars($store['address2']); ?></div> -->
-                <div>District : <?php echo htmlspecialchars($store['district']); ?></div>
-                <div>City, State and/or Country : <?php echo htmlspecialchars($store['city_name']); ?></div>
-                <div><?php echo htmlspecialchars($store['postal_code']); ?></div>
-                <div><?php echo htmlspecialchars($store['phone']); ?></div>           
+<main>
+    <div class="container">
+        <h5 class="center grey-text">List of Stores</h5>
+        
+        <?php if (isset($_SESSION['msg'])): ?>
+            <div class="card-panel green lighten-4">
+                <?php
+                echo $_SESSION['msg'];
+                unset($_SESSION['msg']);
+                ?>
             </div>
-            <div class="card-action right-align">
-              <a class="brand-text" href="details_store.php?store_id=<?php echo $store['store_id'] ?>">More Info</a>
-            </div>  
-          </div>          
+        <?php endif ?>
+
+        <!-- Add Store button -->
+        <div class="row">
+            <div class="col s12 center">
+                <a href="add_store.php" class="btn brand z-depth-0">Add New Store</a>
+            </div>
         </div>
-      <?php endforeach; ?>
-      
+
+        <div class="row">
+            <?php foreach($stores as $store): ?>
+                <div class="col s12 m6">
+                    <div class="card z-depth-0">
+                        <div class="card-content left-align">
+                            <h6>Store Id: <?php echo htmlspecialchars($store['store_id']); ?></h6>
+                            <div>Managing Staff: <?php echo htmlspecialchars($store['manager_first_n'] . ' ' . $store['manager_last_n']); ?></div>
+                            <div>Store Address: <?php echo htmlspecialchars($store['address'] . ' ' . $store['address2']); ?></div>
+                            <div>District: <?php echo htmlspecialchars($store['district']); ?></div>
+                            <div>City: <?php echo htmlspecialchars($store['city_name']); ?></div>
+                            <div>Postal Code: <?php echo htmlspecialchars($store['postal_code']); ?></div>
+                            <div>Phone: <?php echo htmlspecialchars($store['phone']); ?></div>
+                        </div>
+                        <div class="card-action right-align">
+                            <a class="brand-text" href="details_store.php?store_id=<?php echo $store['store_id'] ?>">More Info</a>
+                        </div>  
+                    </div>          
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
-    
-  </div>
+</main>
 
+<?php include('templates/footer.php'); ?>
 
-  <?php include('templates/footer.php'); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems, {});
+    });
+</script>
+
+</body>
 </html>

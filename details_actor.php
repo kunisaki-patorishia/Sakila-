@@ -1,76 +1,95 @@
 <?php 
-  $conn = mysqli_connect('localhost','mike','PCLC1712','entertainment');
+$conn = mysqli_connect('localhost', 'mike', 'PCLC1712', 'entertainment');
 
-  // chk connection
-  if (!$conn) {
-  	echo 'Connection Error : ' . mysqli_connect_error();
-  }
+// Check connection
+if (!$conn) {
+    echo 'Connection Error : ' . mysqli_connect_error();
+}
 
-  if(isset($_POST['delete'])){
-  	$actor_id_to_delete = mysqli_real_escape_string($conn, $_POST['actor_id_to_delete']);
+// Initialize variables for form handling
+$update_success = false;
+$update_error = '';
 
-  	$sql = "DELETE FROM actor WHERE actor_id = $actor_id_to_delete";
+// Handle form submission for update
+if (isset($_POST['update'])) {
+    $actor_id = mysqli_real_escape_string($conn, $_POST['actor_id']);
+    $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
+    $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
 
-  	if(mysqli_query($conn, $sql)){
-  		//success
-  		header('Location: index_actor.php');
-  	} {
-  		// failure
-  		echo 'query error: ' . mysqli_error($conn);
-  	}
-  }
+    // SQL query to update actor details
+    $sql = "UPDATE actor SET first_name = '$first_name', last_name = '$last_name' WHERE actor_id = $actor_id";
 
-  // if(isset($_POST['update'])){
-       //success    
-    // echo 'Still under construction ... ';
-        //   $actor_id_to_update = mysqli_real_escape_string($conn, $_POST['actor_id_to_update']);
+    // Execute query
+    if (mysqli_query($conn, $sql)) {
+        $update_success = true;
+    } else {
+        $update_error = 'Query error: ' . mysqli_error($conn);
+    }
+}
 
-        //   $sql = "UPDATE actor SET actor_first_n = '$actor_first_n', actor_last_n = '$actor_last_n' WHERE actor_id = $actor_id_to_update";
+// Check GET request for actor_id
+if (isset($_GET['actor_id'])) {
+    $actor_id = mysqli_real_escape_string($conn, $_GET['actor_id']);
 
-        //   if(mysqli_query($conn, $sql)){
+    // SQL query to fetch actor details
+    $sql = "SELECT * FROM actor WHERE actor_id = $actor_id";
 
-         //     header('Location: index_actor.php');
-  // } {
-       // failure
-       // echo 'query error: ' . mysqli_error($conn);
-  // }
-   
-  	// chk GET request id param
-	if (isset($_GET['actor_id'])){
-		//print_r($actor_id);
-		$actor_id = mysqli_real_escape_string($conn, $_GET['actor_id']);
-		// mk sql
-		$sql = "SELECT * from actor WHERE actor_id = $actor_id";
-		// get the query result
-		$result = mysqli_query($conn, $sql);
-		// fetch result in array format
-		$actor = mysqli_fetch_assoc($result);
+    // Execute query
+    $result = mysqli_query($conn, $sql);
 
-		mysqli_free_result($result);
-		mysqli_close($conn);
-	}
+    // Fetch result as an associative array
+    $actor = mysqli_fetch_assoc($result);
+
+    // Free result set
+    mysqli_free_result($result);
+
+    // Close connection
+    mysqli_close($conn);
+}
 ?>
 
 <!DOCTYPE html>
 <html>
-   <?php include('templates/header.php'); ?>  
-   <div class="container center">
-   <?php if($actor): ?>
-       <h4><?php echo htmlspecialchars($actor['actor_first_n']); ?></h4>
-       <h4><?php echo htmlspecialchars($actor['actor_last_n']); ?></h4>
+<?php include('templates/header.php'); ?>
 
-       <!-- UPDATE FORM --> <!-- DELETE FORM -->
-       <FORM action="details_actor.php" method="POST">
-<!--          <input type="hidden" name="actor_id_to_update" value="<?php echo $actor['actor_id'] ?>">
-         <input type="submit" name="update" value="Update" class="btn brand z-depth-0"> -->
-         <input type="hidden" name="actor_id_to_delete" value="<?php echo $actor['actor_id'] ?>">
-         <input type="submit" name="delete" value="Delete" class="btn brand z-depth-0">
-       </FORM>
-   <?php else: ?>  <!-- if($actors):  -->
-      <h5><?php echo 'query error: ' . mysqli_error($conn); ?></h5>    
-   <?php endif ?>  <!-- if($actors):  -->    
-
-   </div>
+<div class="container">
+    <h3 class="center">Actor Details</h3>
+    <div class="row">
+        <?php if($actor): ?>
+            <div class="col s6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Actor ID: <?php echo htmlspecialchars($actor['actor_id']); ?></span>
+                        <form action="details_actor.php" method="POST">
+                            <div class="input-field">
+                                <input type="hidden" name="actor_id" value="<?php echo $actor['actor_id']; ?>">
+                                <input type="text" name="first_name" id="first_name" value="<?php echo htmlspecialchars($actor['first_name']); ?>" required>
+                                <label for="first_name">First Name</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="text" name="last_name" id="last_name" value="<?php echo htmlspecialchars($actor['last_name']); ?>" required>
+                                <label for="last_name">Last Name</label>
+                            </div>
+                            <div class="card-action">
+                                <button type="submit" name="update" class="btn blue">Update</button>
+                                <a href="index_actor.php" class="btn grey">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-action">
+                        <!-- DELETE FORM -->
+                        <form action="details_actor.php" method="POST">
+                            <input type="hidden" name="actor_id_to_delete" value="<?php echo $actor['actor_id'] ?>">
+                            <input type="submit" name="delete" value="Delete" class="btn red">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <h5 class="center">Actor not found</h5>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php include('templates/footer.php'); ?>
 </html>

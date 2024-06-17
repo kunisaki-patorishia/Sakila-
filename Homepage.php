@@ -17,7 +17,7 @@
         <h3>Our Services</h3>
         <p>We offer a wide variety of DVDs for rent. Browse our collection and find the perfect movie for your night in!</p>
         <div class="links">
-          <a href="add_store.php" class="btn brand z-depth-0">Add New Store</a>
+          <a href="index_store.php" class="btn brand z-depth-0">Add New Store</a>
           <a href="index_staff.php" class="btn brand z-depth-0">Manage Staff</a>
           <a href="rentals.php" class="btn brand z-depth-0">View Rentals</a>
           <a href="index_film.php" class="btn brand z-depth-0">Manage Films</a> </div>
